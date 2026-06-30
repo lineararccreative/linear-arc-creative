@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Linear Arc Creative — Custom Code & Integrations Studio</title>
+<meta name="description" content="Linear Arc Creative is a creative engineering studio building custom code and integrations across corporate platforms, social media, and brands." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#06070f;
+    --bg-2:#0a0c18;
+    --panel:rgba(255,255,255,.04);
+    --panel-2:rgba(255,255,255,.06);
+    --panel-border:rgba(255,255,255,.10);
+    --ink:#eef1ff;
+    --muted:#9aa3c4;
+    --faint:#5d6688;
+    --c1:#38e8ff;
+    --c2:#7b5cff;
+    --c3:#ff5ca8;
+    --maxw:1180px;
+    --r:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4,.display{font-family:"Space Grotesk","Inter",sans-serif;letter-spacing:-.02em;line-height:1.07;margin:0}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .grad-text{background:linear-gradient(100deg,var(--c1),var(--c2) 52%,var(--c3));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .kicker{font-family:"Space Grotesk";font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--c1)}
+
+  /* Decorative layers */
+  #arc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.85}
+  .bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(58vw 58vw at 80% -12%, rgba(123,92,255,.22), transparent 60%),
+      radial-gradient(52vw 52vw at 6% 10%, rgba(56,232,255,.15), transparent 60%),
+      radial-gradient(70vw 50vw at 50% 118%, rgba(255,92,168,.13), transparent 60%);}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");}
+  main,header,footer{position:relative;z-index:2}
+
+  /* Glass card helper */
+  .glass{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    border:1px solid var(--panel-border);border-radius:var(--r);backdrop-filter:blur(8px)}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;font-weight:600;font-size:14.5px;
+    padding:12px 24px;cursor:pointer;border:1px solid transparent;transition:.25s;font-family:"Space Grotesk"}
+  .btn-primary{background:linear-gradient(100deg,var(--c1),var(--c2));color:#06101a;
+    box-shadow:0 10px 34px -10px rgba(80,150,255,.6)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 44px -12px rgba(80,150,255,.78)}
+  .btn-ghost{border-color:var(--panel-border);color:var(--ink);background:var(--panel)}
+  .btn-ghost:hover{border-color:rgba(255,255,255,.28);background:var(--panel-2)}
+
+  /* Header + mega menu */
+  header{position:sticky;top:0;z-index:60;backdrop-filter:blur(12px);
+    background:linear-gradient(180deg,rgba(6,7,15,.9),rgba(6,7,15,.5));
+    border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+  header.scrolled{border-bottom-color:var(--panel-border);background:rgba(6,7,15,.94)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .logo{display:flex;align-items:center;gap:11px;font-family:"Space Grotesk";font-weight:700;font-size:18px}
+  .logo .mark{width:32px;height:32px;flex:none}
+  .logo span{color:var(--faint);font-weight:500}
+  .nav-links{display:flex;gap:30px;align-items:center}
+  .nav-links>a,.has-mega>button{color:var(--muted);font-size:14.5px;font-weight:500;background:none;border:none;
+    font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color .2s;padding:0}
+  .nav-links>a:hover,.has-mega:hover>button{color:var(--ink)}
+  .has-mega{position:relative}
+  .has-mega>button svg{width:14px;height:14px;transition:transform .25s}
+  .has-mega:hover>button svg{transform:rotate(180deg)}
+  .mega{position:absolute;top:calc(100% + 18px);left:50%;transform:translateX(-50%) translateY(8px);
+    width:560px;padding:14px;opacity:0;visibility:hidden;transition:.25s;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .has-mega:hover .mega{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+  .mega::before{content:"";position:absolute;top:-18px;left:0;right:0;height:18px}
+  .mega a{display:flex;gap:12px;padding:12px;border-radius:13px;transition:background .2s}
+  .mega a:hover{background:var(--panel-2)}
+  .mega .mi{width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;
+    background:linear-gradient(135deg,rgba(56,232,255,.18),rgba(123,92,255,.18));border:1px solid var(--panel-border)}
+  .mega .mi svg{width:18px;height:18px;stroke:var(--c1);fill:none;stroke-width:1.8}
+  .mega h5{font-family:"Space Grotesk";font-size:14.5px;font-weight:600;margin:0 0 2px;color:var(--ink)}
+  .mega p{margin:0;font-size:12.5px;color:var(--faint)}
+  .menu-toggle{display:none;background:none;border:1px solid var(--panel-border);border-radius:11px;
+    width:44px;height:44px;color:var(--ink);cursor:pointer;font-size:20px}
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* Hero */
+  .hero{padding:118px 0 96px;position:relative}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:"Space Grotesk";font-size:12.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--panel-border);background:var(--panel);padding:8px 16px;border-radius:999px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--c1);box-shadow:0 0 12px var(--c1);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero h1{font-size:clamp(42px,7.4vw,88px);font-weight:700;margin:26px 0 0;max-width:15ch}
+  .hero .sub{margin:26px 0 0;font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:62ch}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:40px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
+  .hero-media{position:relative}
+  .hero-media .frame{border-radius:24px;overflow:hidden;border:1px solid var(--panel-border);
+    box-shadow:0 40px 90px -40px rgba(80,120,255,.55);position:relative}
+  .hero-media .frame img{width:100%;height:440px;object-fit:cover;display:block}
+  .hero-media .frame::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(56,232,255,.12),transparent 40%,rgba(123,92,255,.30))}
+  .hero-badge{position:absolute;left:-18px;bottom:26px;display:flex;align-items:center;gap:12px;
+    padding:14px 18px;border-radius:16px}
+  .hero-badge .b-ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;
+    background:linear-gradient(135deg,var(--c1),var(--c2))}
+  .hero-badge .b-ico svg{width:20px;height:20px;stroke:#06101a;fill:none;stroke-width:2}
+  .hero-badge b{font-family:"Space Grotesk";font-size:15px;display:block}
+  .hero-badge span{font-size:12.5px;color:var(--faint)}
+  /* trust strip */
+  .trust{margin-top:74px}
+  .trust .lbl{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .trust .row{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+  .trust .pill{font-family:"Space Grotesk";font-weight:600;font-size:14px;color:var(--muted);
+    border:1px solid var(--panel-border);background:var(--panel);border-radius:12px;padding:11px 18px}
+
+  /* Sections */
+  section{padding:98px 0;position:relative}
+  .sec-head{max-width:700px;margin-bottom:56px}
+  .sec-head h2{font-size:clamp(30px,4.6vw,48px);font-weight:700;margin:14px 0 0}
+  .sec-head p{color:var(--muted);margin:18px 0 0;font-size:17px}
+  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+
+  /* cards */
+  .card{padding:32px;position:relative;overflow:hidden;transition:.3s}
+  .card::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
+    background:linear-gradient(130deg,rgba(56,232,255,.6),transparent 42%);opacity:0;transition:opacity .3s;
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  .card:hover{transform:translateY(-6px)}
+  .card:hover::before{opacity:1}
+  .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;margin-bottom:22px;
+    background:linear-gradient(135deg,rgba(56,232,255,.16),rgba(123,92,255,.16));border:1px solid var(--panel-border)}
+  .ico svg{width:25px;height:25px;stroke:var(--c1);fill:none;stroke-width:1.7}
+  .card h3{font-size:20px;font-weight:600;margin-bottom:10px}
+  .card p{color:var(--muted);font-size:15px;margin:0}
+
+  /* capabilities */
+  .cap{padding:30px}
+  .cap h3{font-size:19px;font-weight:600;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .cap h3 i{width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,var(--c1),var(--c2));display:inline-block}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:12.5px;color:var(--muted);border:1px solid var(--panel-border);border-radius:999px;
+    padding:7px 14px;background:rgba(255,255,255,.02);transition:.2s}
+  .chip:hover{color:var(--ink);border-color:rgba(255,255,255,.24)}
+
+  /* integrations */
+  .intg{display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+  .logo-tile{flex:0 1 158px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    padding:26px 14px;text-align:center;transition:.25s;min-height:120px}
+  .logo-tile:hover{transform:translateY(-4px);background:var(--panel-2)}
+  .logo-tile img{height:30px;width:auto;opacity:.8;transition:.25s}
+  .logo-tile:hover img{opacity:1}
+  .logo-tile span{font-size:12.5px;color:var(--muted);font-weight:500}
+  .logo-tile.custom{position:relative}
+  .logo-tile.custom::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
+    background:linear-gradient(135deg,var(--c1),var(--c2),var(--c3));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  .logo-tile.custom .ci{width:34px;height:34px;display:grid;place-items:center}
+  .logo-tile.custom .ci svg{width:30px;height:30px;stroke:var(--c1);fill:none;stroke-width:1.7}
+  .logo-tile.custom span{color:var(--ink);font-weight:600}
+  .intg-note{text-align:center;color:var(--faint);font-size:14px;margin-top:26px}
+
+  /* value grid */
+  .vgrid{grid-template-columns:repeat(3,1fr)}
+  .v{padding:26px}
+  .v .vh{display:flex;align-items:center;gap:13px;margin-bottom:10px}
+  .v .vh .ico{width:42px;height:42px;border-radius:11px;margin:0}
+  .v .vh .ico svg{width:20px;height:20px}
+  .v h4{font-size:17px;font-weight:600}
+  .v p{color:var(--muted);font-size:14px;margin:0}
+
+  /* process */
+  .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .about p{color:var(--muted);font-size:16.5px}
+  .about p strong{color:var(--ink);font-weight:600}
+  .steps{display:grid;gap:14px}
+  .step{display:flex;gap:16px;padding:18px 20px}
+  .step .num{font-family:"Space Grotesk";font-weight:700;font-size:15px;color:#06101a;flex:none;
+    width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--c1),var(--c2))}
+  .step h4{font-size:15.5px;font-weight:600;margin:3px 0 3px}
+  .step p{margin:0;font-size:14px;color:var(--muted)}
+
+  /* sales band (pricing placeholder) */
+  .salesband{padding:54px;text-align:center;position:relative;overflow:hidden}
+  .salesband::after{content:"";position:absolute;inset:0;z-index:-1;
+    background:radial-gradient(60% 120% at 50% 0%,rgba(123,92,255,.22),transparent 70%)}
+  .salesband h2{font-size:clamp(28px,4vw,42px);font-weight:700;max-width:18ch;margin:0 auto}
+  .salesband p{color:var(--muted);max-width:54ch;margin:18px auto 0;font-size:16.5px}
+  .salesband .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+
+  /* insights */
+  .post{overflow:hidden;transition:.3s}
+  .post:hover{transform:translateY(-6px)}
+  .post .ph{height:184px;position:relative;background-size:cover;background-position:center;
+    background-color:#0a0c18}
+  .post .ph span{position:absolute;left:16px;top:16px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+    background:rgba(6,7,15,.55);border:1px solid var(--panel-border);padding:5px 11px;border-radius:999px;color:var(--ink)}
+  .post .pc{padding:22px}
+  .post h4{font-size:17px;font-weight:600;margin:0 0 8px}
+  .post .meta{color:var(--faint);font-size:13px}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:54px;align-items:start}
+  .contact-lead h2{font-size:clamp(30px,4.6vw,48px);font-weight:700}
+  .contact-lead p{color:var(--muted);margin-top:18px}
+  .contact-meta{margin-top:30px;display:grid;gap:14px}
+  .cm{display:flex;align-items:center;gap:13px;color:var(--muted);font-size:15px}
+  .cm svg{width:19px;height:19px;stroke:var(--c1);fill:none;stroke-width:1.7;flex:none}
+  .cm a:hover{color:var(--ink)}
+  form{padding:32px}
+  .field{margin-bottom:18px}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500}
+  input,select,textarea{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--panel-border);
+    border-radius:12px;padding:13px 15px;color:var(--ink);font-family:inherit;font-size:15px;transition:.2s;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--c1);box-shadow:0 0 0 3px rgba(56,232,255,.15)}
+  textarea{resize:vertical;min-height:120px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  form .btn{width:100%;justify-content:center;margin-top:6px}
+  .form-note{font-size:12.5px;color:var(--faint);margin-top:14px;text-align:center}
+
+  /* footer */
+  footer{border-top:1px solid var(--panel-border);padding:56px 0 40px;margin-top:40px}
+  .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:34px;padding-bottom:40px;border-bottom:1px solid var(--panel-border)}
+  .foot-top h6{font-family:"Space Grotesk";font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 16px}
+  .foot-top a{display:block;color:var(--muted);font-size:14.5px;padding:5px 0;transition:color .2s}
+  .foot-top a:hover{color:var(--ink)}
+  .foot-top p{color:var(--muted);font-size:14.5px;margin:14px 0 0;max-width:30ch}
+  .news{display:flex;gap:8px;margin-top:14px}
+  .news input{border-radius:11px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:26px}
+  .foot-bottom .muted{color:var(--faint);font-size:13.5px}
+  .socials{display:flex;gap:12px}
+  .socials a{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+    border:1px solid var(--panel-border);background:var(--panel);transition:.25s}
+  .socials a:hover{border-color:var(--c1);transform:translateY(-2px)}
+  .socials svg{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:1.7}
+  .socials a:hover svg{stroke:var(--c1)}
+
+  @media(max-width:980px){
+    .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:40px}
+    .hero-media{order:-1}
+    .hero-media .frame img{height:320px}
+    .foot-top{grid-template-columns:1fr 1fr}
+    .intg{grid-template-columns:repeat(4,1fr)}
+  }
+  @media(max-width:860px){
+    .g3,.vgrid{grid-template-columns:1fr 1fr}
+    .intg{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(max-width:680px){
+    .nav-links{display:none}.menu-toggle{display:grid;place-items:center}
+    .g3,.g2,.vgrid,.row2,.foot-top{grid-template-columns:1fr}
+    .logo-tile{flex-basis:42%}
+    section{padding:74px 0}.salesband{padding:38px 22px}
+    .hero-badge{left:0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    #arc-canvas{display:none}.reveal{opacity:1;transform:none;transition:none}.dot{animation:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="arc-canvas"></canvas>
+<div class="bg-glow"></div>
+<div class="grain"></div>
+
+<header id="top">
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Linear Arc Creative home">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0" stop-color="#38e8ff"/><stop offset="1" stop-color="#7b5cff"/></linearGradient></defs>
+        <path d="M6 30 A 18 18 0 0 1 34 30" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="6" y1="30" x2="6" y2="13" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="20" cy="11" r="3.4" fill="url(#g)"/>
+      </svg>
+      <span><b style="color:var(--ink)">Linear Arc</b> Creative</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <div class="has-mega">
+        <button aria-haspopup="true">Solutions
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="mega glass">
+          <a href="#services"><span class="mi"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span><h5>Custom Development</h5><p>Bespoke apps &amp; tools</p></span></a>
+          <a href="#integrations"><span class="mi"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></span><span><h5>Integrations</h5><p>APIs &amp; platforms wired up</p></span></a>
+          <a href="#work"><span class="mi"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span><h5>Social Media</h5><p>Tooling &amp; content pipelines</p></span></a>
+          <a href="#work"><span class="mi"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><span><h5>Brand &amp; Web</h5><p>Sites &amp; experiences</p></span></a>
+          <a href="#services"><span class="mi"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><span><h5>Cloud &amp; Automation</h5><p>Workflows that run themselves</p></span></a>
+          <a href="#about"><span class="mi"><svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20v-4M18 20v-9M3 20h18"/></svg></span><span><h5>Consulting</h5><p>Senior technical guidance</p></span></a>
+        </div>
+      </div>
+      <a href="#work">Capabilities</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#about">Approach</a>
+      <a href="#contact" class="btn btn-primary">Start a project</a>
+    </nav>
+    <button class="menu-toggle" aria-label="Go to contact" onclick="document.getElementById('contact').scrollIntoView()">→</button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow reveal"><span class="dot"></span> Creative engineering studio · Los Angeles</span>
+          <h1 class="reveal">The <span class="grad-text">custom code</span> and integrations behind great ideas.</h1>
+          <p class="sub reveal">Linear Arc Creative is a senior team building bespoke software and platform integrations — across corporate systems, social media, and brands. One clean arc, from concept to launch.</p>
+          <div class="hero-cta reveal">
+            <a href="#contact" class="btn btn-primary">Start a project →</a>
+            <a href="#work" class="btn btn-ghost">See what we build</a>
+          </div>
+        </div>
+        <div class="hero-media reveal">
+          <div class="frame">
+            <img src="https://t4.ftcdn.net/jpg/07/56/25/11/1000_F_756251129_8dgYd9gBBf1QgVOquzzbOJRHYen37HsH.jpg" alt="Abstract digital network of connected nodes on a dark blue background" loading="eager" />
+          </div>
+          <div class="hero-badge glass">
+            <div class="b-ico"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>
+            <div><b>Everything connected</b><span>APIs · platforms · automation</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="trust reveal">
+        <div class="lbl">We build across</div>
+        <div class="row">
+          <span class="pill">Corporate platforms</span>
+          <span class="pill">Social media</span>
+          <span class="pill">Brand &amp; e-commerce</span>
+          <span class="pill">Cloud &amp; APIs</span>
+          <span class="pill">Automation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO / WHAT WE DO -->
+  <section id="intro">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">What we do</div>
+        <h2>Engineering that bends to your idea.</h2>
+        <p>We take on the technical work other teams hand off — custom builds, tricky integrations, and the glue that makes platforms talk to each other. No templates, no hand-offs to junior teams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" style="padding-top:0">
+    <div class="wrap">
+      <div class="grid g3">
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Custom Development</h3><p>Bespoke web apps, tools, and back-end services built from scratch around your exact workflow — performant, maintainable, and yours.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div><h3>Platform Integrations</h3><p>APIs, CRMs, payment rails, and data pipelines wired together cleanly — so your stack runs as one connected system, not silos.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><h3>Automation &amp; Workflows</h3><p>We automate the repetitive — publishing, reporting, sync jobs, and the handoffs between tools — to give teams their time back.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h3>Front-End &amp; Experiences</h3><p>Interactive sites, microsites, and brand experiences with motion and polish — built to feel as considered as the work they showcase.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Social Media Tooling</h3><p>Scheduling, analytics, and content pipelines connected to the platforms your audience lives on — posts and reporting in one place.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 20v-6M6 20v-4M18 20v-9M3 20h18"/></svg></div><h3>Technical Consulting</h3><p>Architecture reviews, build planning, and pragmatic advice when you need a senior engineer in the room before committing.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">Capabilities</div>
+        <h2>One studio, across every surface.</h2>
+        <p>We work fluently across three worlds — and the integrations that connect them. Here's where we plug in.</p>
+      </div>
+      <div class="grid g3">
+        <div class="cap glass reveal"><h3><i></i>Corporate</h3><div class="chips"><span class="chip">Internal tools</span><span class="chip">CRM &amp; ERP</span><span class="chip">Dashboards</span><span class="chip">Data pipelines</span><span class="chip">SSO / Auth</span><span class="chip">REST &amp; GraphQL</span><span class="chip">Reporting</span></div></div>
+        <div class="cap glass reveal"><h3><i></i>Social Media</h3><div class="chips"><span class="chip">Content scheduling</span><span class="chip">Meta &amp; X APIs</span><span class="chip">Analytics</span><span class="chip">Auto-publishing</span><span class="chip">Campaign tooling</span><span class="chip">Webhooks</span><span class="chip">Bots &amp; alerts</span></div></div>
+        <div class="cap glass reveal"><h3><i></i>Brands</h3><div class="chips"><span class="chip">Brand sites</span><span class="chip">E-commerce</span><span class="chip">Microsites</span><span class="chip">Motion &amp; WebGL</span><span class="chip">Headless CMS</span><span class="chip">Landing pages</span><span class="chip">A/B testing</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATIONS -->
+  <section id="integrations" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <div class="kicker">Integrations</div>
+        <h2>We connect to the tools you already use.</h2>
+        <p>From off-the-shelf platforms to AI agents to bespoke endpoints, we wire your stack together so data flows where it should — no copy-paste, no silos.</p>
+      </div>
+      <div class="grid intg">
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/zapier/9aa3c4" alt="Zapier" loading="lazy"/><span>Zapier</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/hubspot/9aa3c4" alt="HubSpot" loading="lazy"/><span>HubSpot</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/github/9aa3c4" alt="GitHub" loading="lazy"/><span>GitHub</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/quickbooks/9aa3c4" alt="QuickBooks" loading="lazy"/><span>QuickBooks</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/stripe/9aa3c4" alt="Stripe" loading="lazy"/><span>Stripe</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/slack/9aa3c4" alt="Slack" loading="lazy"/><span>Slack</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/shopify/9aa3c4" alt="Shopify" loading="lazy"/><span>Shopify</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/salesforce/9aa3c4" alt="Salesforce" loading="lazy"/><span>Salesforce</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlesheets/9aa3c4" alt="Google Workspace" loading="lazy"/><span>Google</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/notion/9aa3c4" alt="Notion" loading="lazy"/><span>Notion</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/mailchimp/9aa3c4" alt="Mailchimp" loading="lazy"/><span>Mailchimp</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/asana/9aa3c4" alt="Asana" loading="lazy"/><span>Asana</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/calendly/9aa3c4" alt="Calendly" loading="lazy"/><span>Calendly</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/microsoftoffice/9aa3c4" alt="Microsoft 365" loading="lazy"/><span>Microsoft 365</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/anthropic/9aa3c4" alt="Claude" loading="lazy"/><span>Claude</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/openai/9aa3c4" alt="OpenAI" loading="lazy"/><span>OpenAI</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlegemini/9aa3c4" alt="Gemini" loading="lazy"/><span>Gemini</span></div>
+        <div class="logo-tile glass reveal custom"><span class="ci"><svg viewBox="0 0 24 24"><path d="M9 7V4a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v3M14 7V4a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v3M7 7h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M12 16v5"/></svg></span><span>Custom API</span></div>
+        <div class="logo-tile glass reveal custom"><span class="ci"><svg viewBox="0 0 24 24"><rect x="5" y="9" width="14" height="10" rx="3"/><path d="M12 9V5M9 2.5h6"/><circle cx="9.5" cy="14" r="1.2" fill="#38e8ff" stroke="none"/><circle cx="14.5" cy="14" r="1.2" fill="#38e8ff" stroke="none"/><path d="M3 13.5v3M21 13.5v3"/></svg></span><span>AI Agents</span></div>
+      </div>
+      <p class="intg-note reveal">Don't see your tool? If it has an API, we can connect it — and build a custom connector if it doesn't.</p>
+    </div>
+  </section>
+
+  <!-- VALUE GRID -->
+  <section id="value" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <div class="kicker">Your creative vision</div>
+        <h2>We craft bold, connected digital products.</h2>
+      </div>
+      <div class="grid vgrid">
+        <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg></div><h4>AI innovation</h4></div><p>Smart features and tooling that fold into creative and engineering workflows seamlessly.</p></div>
+        <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.6.6 1 1.4 1 2h6c0-.6.4-1.4 1-2A7 7 0 0 0 12 2z"/></svg></div><h4>Creative ideas</h4></div><p>Inventive concepts that turn a brief into a distinctive, on-brand experience.</p></div>
+        <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h4>Tech solutions</h4></div><p>Advanced engineering powering dynamic, reliable products at any scale.</p></div>
+        <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0 0-10 7 7 0 0 0-13 2A4 4 0 0 0 5 18z"/></svg></div><h4>Cloud services</h4></div><p>Secure, scalable cloud setups that let teams ship and collaborate from anywhere.</p></div>
+        <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20a6 6 0 0 1 12 0M14.5 20a5 5 0 0 1 6.5-4.8"/></svg></div><h4>Team collaboration</h4></div><p>Clear communication and tight iteration that keep projects moving and visible.</p></div>
+        <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7 12 12l8.7-5M12 12v9"/></svg></div><h4>3D &amp; motion</h4></div><p>Stunning interactive visuals that elevate storytelling and engagement.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPROACH -->
+  <section id="about" class="about">
+    <div class="wrap about-grid">
+      <div class="reveal">
+        <div class="kicker">Our approach</div>
+        <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;margin:14px 0 22px;font-family:'Space Grotesk'">A straight line from idea to launch.</h2>
+        <p>The name is the philosophy. <strong>Linear</strong> — a clear, direct path with no wasted motion. <strong>Arc</strong> — the full journey we carry a project across, from first sketch to shipped product.</p>
+        <p style="margin-top:16px">We're a senior team that takes ownership of the technical hard parts. No layers of account managers, no template factories — just engineers who care about clean code, reliable integrations, and work that holds up under real use.</p>
+      </div>
+      <div class="steps reveal">
+        <div class="step glass"><div class="num">1</div><div><h4>Discover</h4><p>We dig into the problem, the platforms, and the constraints before writing a line of code.</p></div></div>
+        <div class="step glass"><div class="num">2</div><div><h4>Architect</h4><p>A clear build plan and integration map, so you know exactly what's being built and why.</p></div></div>
+        <div class="step glass"><div class="num">3</div><div><h4>Build</h4><p>Tight iteration, visible progress, and code written to last beyond the launch.</p></div></div>
+        <div class="step glass"><div class="num">4</div><div><h4>Launch &amp; support</h4><p>We ship it, connect it, and stay close while it settles into real-world use.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALES BAND (pricing placeholder) -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="salesband glass reveal">
+        <div class="kicker">Engagements</div>
+        <h2 style="margin-top:12px">Every project is scoped to fit.</h2>
+        <p>We don't do off-the-shelf packages. Tell us what you're building and we'll come back with a clear plan and a quote — or just connect with our team to talk it through.</p>
+        <div class="btns">
+          <a href="#contact" class="btn btn-primary">Send your project for review →</a>
+          <a href="mailto:hello@lineararccreative.com" class="btn btn-ghost">Connect with sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS -->
+  <section id="insights">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">Insights</div>
+        <h2>Notes from the studio.</h2>
+        <p>Thinking on custom builds, integrations, and the craft of shipping technical work that lasts.</p>
+      </div>
+      <div class="grid g3">
+        <article class="post glass reveal"><div class="ph" style="background-image:linear-gradient(180deg,rgba(6,7,15,.2),rgba(6,7,15,.72)),url('https://t4.ftcdn.net/jpg/04/30/25/99/500_F_430259996_tQlEf5D7bUmOE2aXpTLNW0AFY9TjYTFH.jpg')"><span>Integrations</span></div><div class="pc"><h4>Why most integrations break — and how to build ones that don't</h4><div class="meta">Coming soon</div></div></article>
+        <article class="post glass reveal"><div class="ph" style="background-image:linear-gradient(180deg,rgba(6,7,15,.2),rgba(6,7,15,.72)),url('https://t3.ftcdn.net/jpg/03/11/88/60/500_F_311886015_Y1QPOPzfGTZY4oyGv1QjXqoYalCoaziy.jpg')"><span>Process</span></div><div class="pc"><h4>From concept to launch: inside a Linear Arc build</h4><div class="meta">Coming soon</div></div></article>
+        <article class="post glass reveal"><div class="ph" style="background-image:linear-gradient(180deg,rgba(6,7,15,.2),rgba(6,7,15,.72)),url('https://t3.ftcdn.net/jpg/05/42/54/04/500_F_542540484_Lort5Zk5ItihQ089e4RvJ8S4CMeX9blt.jpg')"><span>Engineering</span></div><div class="pc"><h4>Custom vs. off-the-shelf: when bespoke code actually pays off</h4><div class="meta">Coming soon</div></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap contact-grid">
+      <div class="contact-lead reveal">
+        <div class="kicker">Get in touch</div>
+        <h2>Let's build<br/>something.</h2>
+        <p>Tell us about the project — a custom build, a stubborn integration, or an idea you're not sure is possible. We'll tell you how we'd approach it.</p>
+        <div class="contact-meta">
+          <div class="cm"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><a href="mailto:hello@lineararccreative.com">hello@lineararccreative.com</a></div>
+          <div class="cm"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Los Angeles, CA</span></div>
+          <div class="cm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Replies within 1–2 business days</span></div>
+        </div>
+      </div>
+      <form class="glass reveal" onsubmit="return handleSubmit(event)">
+        <div class="row2">
+          <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" placeholder="Your name" required /></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@company.com" required /></div>
+        </div>
+        <div class="field"><label for="company">Company / Brand <span style="color:var(--faint)">(optional)</span></label><input id="company" name="company" type="text" placeholder="Where you're from" /></div>
+        <div class="field"><label for="type">Project type</label>
+          <select id="type" name="type">
+            <option>Custom development</option><option>Platform integration</option><option>Automation &amp; workflows</option>
+            <option>Brand site / experience</option><option>Social media tooling</option><option>Technical consulting</option><option>Something else</option>
+          </select>
+        </div>
+        <div class="field"><label for="msg">Project details</label><textarea id="msg" name="msg" placeholder="What are you trying to build?" required></textarea></div>
+        <button type="submit" class="btn btn-primary">Send project brief →</button>
+        <p class="form-note">This opens your email app with the details pre-filled. To accept submissions automatically, we can wire a form service when it goes live.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="logo">
+          <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M6 30 A 18 18 0 0 1 34 30" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="6" y1="30" x2="6" y2="13" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="20" cy="11" r="3.4" fill="url(#g)"/>
+          </svg>
+          <span><b style="color:var(--ink)">Linear Arc</b> Creative</span>
+        </div>
+        <p>Custom code &amp; integrations across corporate, social, and brand platforms. Built in Los Angeles.</p>
+      </div>
+      <div>
+        <h6>Studio</h6>
+        <a href="#services">Services</a><a href="#work">Capabilities</a><a href="#integrations">Integrations</a><a href="#about">Approach</a><a href="#insights">Insights</a>
+      </div>
+      <div>
+        <h6>Connect</h6>
+        <a href="#contact">Start a project</a><a href="mailto:hello@lineararccreative.com">Email us</a><a href="#pricing">Engagements</a>
+      </div>
+      <div>
+        <h6>Newsletter</h6>
+        <p style="margin-top:0">Occasional notes on building. No spam.</p>
+        <form class="news" onsubmit="event.preventDefault();this.reset();alert('Thanks — newsletter signup will be wired up at launch.')">
+          <input type="email" placeholder="you@email.com" aria-label="Email" required />
+          <button class="btn btn-primary" type="submit" style="padding:11px 16px">→</button>
+        </form>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="socials">
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0 0 20 4.8 4.9 4.9 0 0 0 19.9 1S18.7.6 16 2.5a13.4 13.4 0 0 0-7 0C6.3.6 5.1 1 5.1 1A4.9 4.9 0 0 0 5 4.8 5.2 5.2 0 0 0 3.7 8.4c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V22"/></svg></a>
+        <a href="mailto:hello@lineararccreative.com" aria-label="Email"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></a>
+      </div>
+      <div class="muted">© <span id="yr"></span> Linear Arc Creative · Made in Los Angeles</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  const header = document.querySelector('header');
+  addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 8), {passive:true});
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'),(i%4)*70); io.unobserve(e.target);} });
+  },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  function handleSubmit(e){
+    e.preventDefault();
+    const f=e.target;
+    const subject=encodeURIComponent('Project brief — '+(f.name.value||'New enquiry'));
+    const body=encodeURIComponent('Name: '+f.name.value+'\nEmail: '+f.email.value+'\nCompany: '+(f.company.value||'—')+'\nProject type: '+f.type.value+'\n\nDetails:\n'+f.msg.value);
+    window.location.href='mailto:hello@lineararccreative.com?subject='+subject+'&body='+body;
+    return false;
+  }
+
+  (function(){
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cv=document.getElementById('arc-canvas'),ctx=cv.getContext('2d');
+    let w,h,dpr,arcs=[];const COLORS=['rgba(56,232,255,','rgba(123,92,255,','rgba(255,92,168,'];
+    function resize(){dpr=Math.min(devicePixelRatio||1,2);w=cv.width=innerWidth*dpr;h=cv.height=innerHeight*dpr;
+      cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';build();}
+    function build(){const n=innerWidth<680?7:14;arcs=[];for(let i=0;i<n;i++){arcs.push({
+      x:Math.random()*w,y:Math.random()*h,r:(60+Math.random()*260)*dpr,start:Math.random()*Math.PI*2,
+      len:(0.4+Math.random()*1.4),speed:(Math.random()*0.4+0.1)*(Math.random()<.5?-1:1)*0.003,
+      c:COLORS[i%COLORS.length],a:0.04+Math.random()*0.10,lw:(0.6+Math.random()*1.6)*dpr});}}
+    function frame(){ctx.clearRect(0,0,w,h);for(const o of arcs){o.start+=o.speed;ctx.beginPath();
+      ctx.strokeStyle=o.c+o.a+')';ctx.lineWidth=o.lw;ctx.arc(o.x,o.y,o.r,o.start,o.start+o.len);ctx.stroke();}
+      requestAnimationFrame(frame);}
+    addEventListener('resize',resize,{passive:true});resize();frame();
+  })();
+</script>
+</body>
+</html>
