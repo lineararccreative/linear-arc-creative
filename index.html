@@ -3,21 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#06070f" />
 <title>Linear Arc Creative — Custom Code & Integrations Studio</title>
 <meta name="description" content="Linear Arc Creative is a creative engineering studio building custom code and integrations across corporate platforms, social media, and brands." />
+<link rel="canonical" href="https://lineararccreative.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Linear Arc Creative" />
+<meta property="og:title" content="Linear Arc Creative — Custom Code & Integrations Studio" />
+<meta property="og:description" content="Custom code and integrations across corporate platforms, social media, and brands. Built in Los Angeles." />
+<meta property="og:url" content="https://lineararccreative.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Linear Arc Creative — Custom Code & Integrations Studio" />
+<meta name="twitter:description" content="Custom code and integrations across corporate platforms, social media, and brands. Built in Los Angeles." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#06070f;
-    --bg-2:#0a0c18;
     --panel:rgba(255,255,255,.04);
     --panel-2:rgba(255,255,255,.06);
     --panel-border:rgba(255,255,255,.10);
     --ink:#eef1ff;
     --muted:#9aa3c4;
-    --faint:#5d6688;
+    --faint:#7c85a6;
     --c1:#38e8ff;
     --c2:#7b5cff;
     --c3:#ff5ca8;
@@ -29,13 +38,18 @@
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6;
     -webkit-font-smoothing:antialiased;overflow-x:hidden}
-  h1,h2,h3,h4,.display{font-family:"Space Grotesk","Inter",sans-serif;letter-spacing:-.02em;line-height:1.07;margin:0}
+  h1,h2,h3,h4{margin:0;font-family:"Space Grotesk","Inter",sans-serif;letter-spacing:-.02em;line-height:1.07}
   a{color:inherit;text-decoration:none}
   img{max-width:100%;display:block}
+  ::selection{background:var(--c2);color:#fff}
+  :focus-visible{outline:2px solid var(--c1);outline-offset:3px;border-radius:4px}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
   .grad-text{background:linear-gradient(100deg,var(--c1),var(--c2) 52%,var(--c3));
     -webkit-background-clip:text;background-clip:text;color:transparent}
   .kicker{font-family:"Space Grotesk";font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--c1)}
+  .skip{position:absolute;left:-999px;top:0;z-index:200;background:var(--c1);color:#06121a;
+    padding:10px 16px;font-weight:600;border-radius:8px}
+  .skip:focus{left:14px;top:14px}
 
   /* Decorative layers */
   #arc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.85}
@@ -48,18 +62,17 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");}
   main,header,footer{position:relative;z-index:2}
 
-  /* Glass card helper */
   .glass{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
     border:1px solid var(--panel-border);border-radius:var(--r);backdrop-filter:blur(8px)}
 
   /* Buttons */
   .btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;font-weight:600;font-size:14.5px;
     padding:12px 24px;cursor:pointer;border:1px solid transparent;transition:.25s;font-family:"Space Grotesk"}
-  .btn-primary{background:linear-gradient(100deg,var(--c1),var(--c2));color:#06101a;
+  .btn-primary{background:linear-gradient(100deg,var(--c1),var(--c2));color:#030913;
     box-shadow:0 10px 34px -10px rgba(80,150,255,.6)}
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 44px -12px rgba(80,150,255,.78)}
   .btn-ghost{border-color:var(--panel-border);color:var(--ink);background:var(--panel)}
-  .btn-ghost:hover{border-color:rgba(255,255,255,.28);background:var(--panel-2)}
+  .btn-ghost:hover{border-color:transparent;color:#030913;background:linear-gradient(100deg,var(--c3),var(--c2))}
 
   /* Header + mega menu */
   header{position:sticky;top:0;z-index:60;backdrop-filter:blur(12px);
@@ -70,6 +83,7 @@
   .logo{display:flex;align-items:center;gap:11px;font-family:"Space Grotesk";font-weight:700;font-size:18px}
   .logo .mark{width:32px;height:32px;flex:none}
   .logo span{color:var(--faint);font-weight:500}
+  .logo b{color:var(--ink)}
   .nav-links{display:flex;gap:30px;align-items:center}
   .nav-links>a,.has-mega>button{color:var(--muted);font-size:14.5px;font-weight:500;background:none;border:none;
     font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color .2s;padding:0}
@@ -79,7 +93,7 @@
   .has-mega:hover>button svg{transform:rotate(180deg)}
   .mega{position:absolute;top:calc(100% + 18px);left:50%;transform:translateX(-50%) translateY(8px);
     width:560px;padding:14px;opacity:0;visibility:hidden;transition:.25s;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-  .has-mega:hover .mega{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+  .has-mega:hover .mega,.has-mega:focus-within .mega{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
   .mega::before{content:"";position:absolute;top:-18px;left:0;right:0;height:18px}
   .mega a{display:flex;gap:12px;padding:12px;border-radius:13px;transition:background .2s}
   .mega a:hover{background:var(--panel-2)}
@@ -89,37 +103,35 @@
   .mega h5{font-family:"Space Grotesk";font-size:14.5px;font-weight:600;margin:0 0 2px;color:var(--ink)}
   .mega p{margin:0;font-size:12.5px;color:var(--faint)}
   .menu-toggle{display:none;background:none;border:1px solid var(--panel-border);border-radius:11px;
-    width:44px;height:44px;color:var(--ink);cursor:pointer;font-size:20px}
+    width:44px;height:44px;color:var(--ink);cursor:pointer}
+  .menu-toggle svg{width:20px;height:20px}
 
-  /* Reveal */
   .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
   .reveal.in{opacity:1;transform:none}
 
   /* Hero */
   .hero{padding:118px 0 96px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
   .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:"Space Grotesk";font-size:12.5px;
     letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
     border:1px solid var(--panel-border);background:var(--panel);padding:8px 16px;border-radius:999px}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--c1);box-shadow:0 0 12px var(--c1);animation:pulse 2.4s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-  .hero h1{font-size:clamp(42px,7.4vw,88px);font-weight:700;margin:26px 0 0;max-width:15ch}
+  .hero h1{font-size:clamp(42px,7.4vw,86px);font-weight:700;margin:26px 0 0;max-width:15ch}
   .hero .sub{margin:26px 0 0;font-size:clamp(17px,2.1vw,21px);color:var(--muted);max-width:62ch}
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:40px}
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
   .hero-media{position:relative}
   .hero-media .frame{border-radius:24px;overflow:hidden;border:1px solid var(--panel-border);
     box-shadow:0 40px 90px -40px rgba(80,120,255,.55);position:relative}
   .hero-media .frame img{width:100%;height:440px;object-fit:cover;display:block}
   .hero-media .frame::after{content:"";position:absolute;inset:0;
     background:linear-gradient(160deg,rgba(56,232,255,.12),transparent 40%,rgba(123,92,255,.30))}
-  .hero-badge{position:absolute;left:-18px;bottom:26px;display:flex;align-items:center;gap:12px;
-    padding:14px 18px;border-radius:16px}
+  .hero-badge{position:absolute;left:-18px;bottom:26px;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:16px}
   .hero-badge .b-ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;
     background:linear-gradient(135deg,var(--c1),var(--c2))}
-  .hero-badge .b-ico svg{width:20px;height:20px;stroke:#06101a;fill:none;stroke-width:2}
+  .hero-badge .b-ico svg{width:20px;height:20px;stroke:#030913;fill:none;stroke-width:2}
   .hero-badge b{font-family:"Space Grotesk";font-size:15px;display:block}
   .hero-badge span{font-size:12.5px;color:var(--faint)}
-  /* trust strip */
   .trust{margin-top:74px}
   .trust .lbl{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
   .trust .row{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
@@ -132,12 +144,9 @@
   .sec-head h2{font-size:clamp(30px,4.6vw,48px);font-weight:700;margin:14px 0 0}
   .sec-head p{color:var(--muted);margin:18px 0 0;font-size:17px}
   .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
-
   .grid{display:grid;gap:20px}
   .g3{grid-template-columns:repeat(3,1fr)}
-  .g2{grid-template-columns:repeat(2,1fr)}
 
-  /* cards */
   .card{padding:32px;position:relative;overflow:hidden;transition:.3s}
   .card::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
     background:linear-gradient(130deg,rgba(56,232,255,.6),transparent 42%);opacity:0;transition:opacity .3s;
@@ -150,14 +159,21 @@
   .card h3{font-size:20px;font-weight:600;margin-bottom:10px}
   .card p{color:var(--muted);font-size:15px;margin:0}
 
-  /* capabilities */
   .cap{padding:30px}
   .cap h3{font-size:19px;font-weight:600;display:flex;align-items:center;gap:10px;margin-bottom:16px}
   .cap h3 i{width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,var(--c1),var(--c2));display:inline-block}
   .chips{display:flex;flex-wrap:wrap;gap:8px}
   .chip{font-size:12.5px;color:var(--muted);border:1px solid var(--panel-border);border-radius:999px;
     padding:7px 14px;background:rgba(255,255,255,.02);transition:.2s}
-  .chip:hover{color:var(--ink);border-color:rgba(255,255,255,.24)}
+  .chip:hover{color:#030913;border-color:transparent;background:linear-gradient(100deg,var(--c1),var(--c2))}
+
+  .vgrid{grid-template-columns:repeat(3,1fr)}
+  .v{padding:26px}
+  .v .vh{display:flex;align-items:center;gap:13px;margin-bottom:10px}
+  .v .vh .ico{width:42px;height:42px;border-radius:11px;margin:0}
+  .v .vh .ico svg{width:20px;height:20px}
+  .v h4{font-size:17px;font-weight:600}
+  .v p{color:var(--muted);font-size:14px;margin:0}
 
   /* integrations */
   .intg{display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
@@ -179,27 +195,16 @@
   .logo-tile.custom span{color:var(--ink);font-weight:600}
   .intg-note{text-align:center;color:var(--faint);font-size:14px;margin-top:26px}
 
-  /* value grid */
-  .vgrid{grid-template-columns:repeat(3,1fr)}
-  .v{padding:26px}
-  .v .vh{display:flex;align-items:center;gap:13px;margin-bottom:10px}
-  .v .vh .ico{width:42px;height:42px;border-radius:11px;margin:0}
-  .v .vh .ico svg{width:20px;height:20px}
-  .v h4{font-size:17px;font-weight:600}
-  .v p{color:var(--muted);font-size:14px;margin:0}
-
-  /* process */
   .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
   .about p{color:var(--muted);font-size:16.5px}
   .about p strong{color:var(--ink);font-weight:600}
   .steps{display:grid;gap:14px}
   .step{display:flex;gap:16px;padding:18px 20px}
-  .step .num{font-family:"Space Grotesk";font-weight:700;font-size:15px;color:#06101a;flex:none;
+  .step .num{font-family:"Space Grotesk";font-weight:700;font-size:15px;color:#030913;flex:none;
     width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--c1),var(--c2))}
   .step h4{font-size:15.5px;font-weight:600;margin:3px 0 3px}
   .step p{margin:0;font-size:14px;color:var(--muted)}
 
-  /* sales band (pricing placeholder) */
   .salesband{padding:54px;text-align:center;position:relative;overflow:hidden}
   .salesband::after{content:"";position:absolute;inset:0;z-index:-1;
     background:radial-gradient(60% 120% at 50% 0%,rgba(123,92,255,.22),transparent 70%)}
@@ -207,18 +212,15 @@
   .salesband p{color:var(--muted);max-width:54ch;margin:18px auto 0;font-size:16.5px}
   .salesband .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px}
 
-  /* insights */
   .post{overflow:hidden;transition:.3s}
   .post:hover{transform:translateY(-6px)}
-  .post .ph{height:184px;position:relative;background-size:cover;background-position:center;
-    background-color:#0a0c18}
+  .post .ph{height:184px;position:relative;background-size:cover;background-position:center;background-color:#0a0c18}
   .post .ph span{position:absolute;left:16px;top:16px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
     background:rgba(6,7,15,.55);border:1px solid var(--panel-border);padding:5px 11px;border-radius:999px;color:var(--ink)}
   .post .pc{padding:22px}
   .post h4{font-size:17px;font-weight:600;margin:0 0 8px}
   .post .meta{color:var(--faint);font-size:13px}
 
-  /* contact */
   .contact-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:54px;align-items:start}
   .contact-lead h2{font-size:clamp(30px,4.6vw,48px);font-weight:700}
   .contact-lead p{color:var(--muted);margin-top:18px}
@@ -232,25 +234,21 @@
   input,select,textarea{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--panel-border);
     border-radius:12px;padding:13px 15px;color:var(--ink);font-family:inherit;font-size:15px;transition:.2s;outline:none}
   input:focus,select:focus,textarea:focus{border-color:var(--c1);box-shadow:0 0 0 3px rgba(56,232,255,.15)}
+  textarea{resize:vertical;min-height:120px}
   select{appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;padding-right:42px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239aa3c4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6l4 4 4-4'/></svg>");
     background-repeat:no-repeat;background-position:right 15px center}
   select option{background:#0a0c18;color:#eef1ff}
-  textarea{resize:vertical;min-height:120px}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  form .btn{width:100%;justify-content:center;margin-top:6px}
+  form .submit{width:100%;justify-content:center;margin-top:6px}
   .form-note{font-size:12.5px;color:var(--faint);margin-top:14px;text-align:center}
 
-  /* footer */
   footer{border-top:1px solid var(--panel-border);padding:56px 0 40px;margin-top:40px}
-  .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:34px;padding-bottom:40px;border-bottom:1px solid var(--panel-border)}
+  .foot-top{display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid var(--panel-border)}
   .foot-top h6{font-family:"Space Grotesk";font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 16px}
   .foot-top a{display:block;color:var(--muted);font-size:14.5px;padding:5px 0;transition:color .2s}
   .foot-top a:hover{color:var(--ink)}
-  .foot-top p{color:var(--muted);font-size:14.5px;margin:14px 0 0;max-width:30ch}
-  .news{display:flex;gap:8px;margin-top:14px}
-  .news input{border-radius:11px;flex:1 1 auto;min-width:0}
-  .news .btn{flex:none;padding:11px 16px}
+  .foot-brand p{color:var(--muted);font-size:14.5px;margin:14px 0 0;max-width:32ch}
   .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:26px}
   .foot-bottom .muted{color:var(--faint);font-size:13.5px}
   .socials{display:flex;gap:12px}
@@ -260,42 +258,14 @@
   .socials svg{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:1.7}
   .socials a:hover svg{stroke:var(--c1)}
 
-  /* ---- color accents ---- */
-  #intro,#services{background:radial-gradient(60% 70% at 88% -10%,rgba(123,92,255,.12),transparent 60%)}
-  #work{background:radial-gradient(55% 80% at 8% 10%,rgba(56,232,255,.10),transparent 60%)}
-  #integrations{background:radial-gradient(70% 60% at 50% -5%,rgba(255,92,168,.11),transparent 65%)}
-  #value{background:radial-gradient(60% 75% at 92% 25%,rgba(123,92,255,.11),transparent 60%)}
-  #about{background:radial-gradient(55% 75% at 4% 50%,rgba(56,232,255,.10),transparent 60%)}
-  #insights{background:radial-gradient(60% 70% at 82% 110%,rgba(255,92,168,.10),transparent 65%)}
-  #contact{background:radial-gradient(60% 80% at 14% -5%,rgba(123,92,255,.12),transparent 60%)}
-
-  /* rotate service + value icon colors */
-  #services .card:nth-child(3n+2) .ico,#value .v:nth-child(3n+2) .ico{background:linear-gradient(135deg,rgba(123,92,255,.22),rgba(123,92,255,.05))}
-  #services .card:nth-child(3n+2) .ico svg,#value .v:nth-child(3n+2) .ico svg{stroke:var(--c2)}
-  #services .card:nth-child(3n) .ico,#value .v:nth-child(3n) .ico{background:linear-gradient(135deg,rgba(255,92,168,.22),rgba(255,92,168,.05))}
-  #services .card:nth-child(3n) .ico svg,#value .v:nth-child(3n) .ico svg{stroke:var(--c3)}
-
-  /* colored top accent on capability cards */
-  #work .cap{border-top:2px solid transparent}
-  #work .cap:nth-child(1){border-top-color:var(--c1)}
-  #work .cap:nth-child(2){border-top-color:var(--c2)}
-  #work .cap:nth-child(3){border-top-color:var(--c3)}
-
-  /* vibrant secondary button hover */
-  .btn-ghost:hover{border-color:transparent;color:#06101a;background:linear-gradient(100deg,var(--c3),var(--c2))}
-  /* chip colored hover */
-  .chip:hover{color:#06101a;border-color:transparent;background:linear-gradient(100deg,var(--c1),var(--c2))}
-
-  /* back-to-top button */
   #toTop{position:fixed;right:22px;bottom:22px;z-index:70;width:50px;height:50px;border-radius:50%;
     border:none;background:linear-gradient(135deg,var(--c1),var(--c2));cursor:pointer;
     display:grid;place-items:center;opacity:0;visibility:hidden;transform:translateY(14px);
     transition:opacity .3s,transform .3s,visibility .3s,box-shadow .3s;box-shadow:0 12px 30px -8px rgba(80,150,255,.6)}
   #toTop.show{opacity:1;visibility:visible;transform:none}
   #toTop:hover{transform:translateY(-3px);box-shadow:0 16px 38px -10px rgba(80,150,255,.8)}
-  #toTop svg{width:22px;height:22px;stroke:#06101a;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  #toTop svg{width:22px;height:22px;stroke:#030913;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 
-  /* mobile menu (shown under 680px) */
   .mobile-menu{display:none}
 
   @media(max-width:980px){
@@ -303,15 +273,14 @@
     .hero-media{order:-1}
     .hero-media .frame img{height:320px}
     .foot-top{grid-template-columns:1fr 1fr}
-    .intg{grid-template-columns:repeat(4,1fr)}
+    .foot-brand{grid-column:1/-1}
   }
   @media(max-width:860px){
     .g3,.vgrid{grid-template-columns:1fr 1fr}
-    .intg{grid-template-columns:repeat(3,1fr)}
   }
   @media(max-width:680px){
     .nav-links{display:none}.menu-toggle{display:grid;place-items:center}
-    .g3,.g2,.vgrid,.row2,.foot-top{grid-template-columns:1fr}
+    .g3,.vgrid,.row2{grid-template-columns:1fr}
     .logo-tile{flex-basis:42%}
     section{padding:72px 0}.salesband{padding:38px 22px}
     .hero{padding:78px 0 58px}
@@ -322,6 +291,10 @@
     .hero-cta .btn{flex:1 1 auto;justify-content:center}
     .wrap{padding:0 18px}
     .sec-head{margin-bottom:40px}
+    .foot-top{grid-template-columns:1fr 1fr;gap:8px 28px;padding-bottom:26px}
+    .foot-brand{grid-column:1/-1;margin-bottom:18px}
+    .foot-top a{padding:7px 0}
+    .foot-bottom{flex-direction:column-reverse;align-items:flex-start;gap:16px}
     .mobile-menu{display:block;position:absolute;left:0;right:0;top:100%;
       background:rgba(6,7,15,.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--panel-border);
       max-height:0;overflow:hidden;transition:max-height .32s ease}
@@ -329,7 +302,7 @@
     .mobile-menu a{display:block;padding:15px 24px;color:var(--muted);font-family:"Space Grotesk";
       font-weight:500;border-top:1px solid rgba(255,255,255,.06)}
     .mobile-menu a:active,.mobile-menu a:hover{color:var(--ink);background:var(--panel)}
-    .mobile-menu .mm-cta{margin:16px 24px 22px;text-align:center;color:#06101a;border-top:none}
+    .mobile-menu .mm-cta{margin:16px 24px 22px;text-align:center;color:#030913;border-top:none}
     #toTop{right:16px;bottom:16px;width:46px;height:46px}
   }
   @media(max-width:400px){
@@ -338,13 +311,16 @@
   }
   @media(prefers-reduced-motion:reduce){
     #arc-canvas{display:none}.reveal{opacity:1;transform:none;transition:none}.dot{animation:none}
+    *{scroll-behavior:auto}
+    .card:hover,.btn-primary:hover,.logo-tile:hover,.post:hover,#toTop:hover,.socials a:hover{transform:none}
   }
 </style>
 </head>
 <body>
-<canvas id="arc-canvas"></canvas>
-<div class="bg-glow"></div>
-<div class="grain"></div>
+<a href="#main" class="skip">Skip to content</a>
+<canvas id="arc-canvas" aria-hidden="true"></canvas>
+<div class="bg-glow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 
 <header id="top">
   <div class="wrap nav">
@@ -356,11 +332,11 @@
         <line x1="6" y1="30" x2="6" y2="13" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
         <circle cx="20" cy="11" r="3.4" fill="url(#g)"/>
       </svg>
-      <span><b style="color:var(--ink)">Linear Arc</b> Creative</span>
+      <span><b>Linear Arc</b> Creative</span>
     </a>
     <nav class="nav-links" aria-label="Primary">
       <div class="has-mega">
-        <button aria-haspopup="true">Solutions
+        <button aria-haspopup="menu" aria-expanded="false">Solutions
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="mega glass">
@@ -375,6 +351,7 @@
       <a href="#work">Capabilities</a>
       <a href="#integrations">Integrations</a>
       <a href="#about">Approach</a>
+      <a href="#insights">Insights</a>
       <a href="#contact" class="btn btn-primary">Start a project</a>
     </nav>
     <button class="menu-toggle" id="menuBtn" aria-label="Open menu" aria-expanded="false">
@@ -391,23 +368,23 @@
   </nav>
 </header>
 
-<main>
+<main id="main">
   <!-- HERO -->
   <section class="hero">
     <div class="wrap">
       <div class="hero-grid">
-        <div class="hero-copy">
-          <span class="eyebrow reveal"><span class="dot"></span> Creative engineering studio · Los Angeles</span>
-          <h1 class="reveal">The <span class="grad-text">custom code</span> and integrations behind great ideas.</h1>
-          <p class="sub reveal">Linear Arc Creative is a senior team building bespoke software and platform integrations — across corporate systems, social media, and brands. One clean arc, from concept to launch.</p>
-          <div class="hero-cta reveal">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> Creative engineering studio · Los Angeles</span>
+          <h1>The <span class="grad-text">custom code</span> and integrations behind great ideas.</h1>
+          <p class="sub">Linear Arc Creative is a senior team building bespoke software and platform integrations — across corporate systems, social media, and brands. One clean arc, from concept to launch.</p>
+          <div class="hero-cta">
             <a href="#contact" class="btn btn-primary">Start a project →</a>
             <a href="#work" class="btn btn-ghost">See what we build</a>
           </div>
         </div>
-        <div class="hero-media reveal">
+        <div class="hero-media">
           <div class="frame">
-            <img src="https://t4.ftcdn.net/jpg/07/56/25/11/1000_F_756251129_8dgYd9gBBf1QgVOquzzbOJRHYen37HsH.jpg" alt="Abstract digital network of connected nodes on a dark blue background" loading="eager" />
+            <img src="https://t4.ftcdn.net/jpg/07/56/25/11/1000_F_756251129_8dgYd9gBBf1QgVOquzzbOJRHYen37HsH.jpg" alt="Abstract digital network of connected nodes on a dark blue background" width="1000" height="667" loading="eager" referrerpolicy="no-referrer" />
           </div>
           <div class="hero-badge glass">
             <div class="b-ico"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>
@@ -415,7 +392,7 @@
           </div>
         </div>
       </div>
-      <div class="trust reveal">
+      <div class="trust">
         <div class="lbl">We build across</div>
         <div class="row">
           <span class="pill">Corporate platforms</span>
@@ -428,20 +405,14 @@
     </div>
   </section>
 
-  <!-- INTRO / WHAT WE DO -->
-  <section id="intro">
+  <!-- SERVICES -->
+  <section id="services">
     <div class="wrap">
       <div class="sec-head reveal">
         <div class="kicker">What we do</div>
         <h2>Engineering that bends to your idea.</h2>
         <p>We take on the technical work other teams hand off — custom builds, tricky integrations, and the glue that makes platforms talk to each other. No templates, no hand-offs to junior teams.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="services" style="padding-top:0">
-    <div class="wrap">
       <div class="grid g3">
         <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Custom Development</h3><p>Bespoke web apps, tools, and back-end services built from scratch around your exact workflow — performant, maintainable, and yours.</p></article>
         <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div><h3>Platform Integrations</h3><p>APIs, CRMs, payment rails, and data pipelines wired together cleanly — so your stack runs as one connected system, not silos.</p></article>
@@ -470,7 +441,7 @@
   </section>
 
   <!-- INTEGRATIONS -->
-  <section id="integrations" style="padding-top:0">
+  <section id="integrations">
     <div class="wrap">
       <div class="sec-head center reveal">
         <div class="kicker">Integrations</div>
@@ -502,8 +473,8 @@
     </div>
   </section>
 
-  <!-- VALUE GRID -->
-  <section id="value" style="padding-top:0">
+  <!-- VALUE -->
+  <section id="value">
     <div class="wrap">
       <div class="sec-head center reveal">
         <div class="kicker">Your creative vision</div>
@@ -525,7 +496,7 @@
     <div class="wrap about-grid">
       <div class="reveal">
         <div class="kicker">Our approach</div>
-        <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;margin:14px 0 22px;font-family:'Space Grotesk'">A straight line from idea to launch.</h2>
+        <h2 style="font-size:clamp(28px,4vw,44px);font-weight:700;margin:14px 0 22px">A straight line from idea to launch.</h2>
         <p>The name is the philosophy. <strong>Linear</strong> — a clear, direct path with no wasted motion. <strong>Arc</strong> — the full journey we carry a project across, from first sketch to shipped product.</p>
         <p style="margin-top:16px">We're a senior team that takes ownership of the technical hard parts. No layers of account managers, no template factories — just engineers who care about clean code, reliable integrations, and work that holds up under real use.</p>
       </div>
@@ -538,7 +509,7 @@
     </div>
   </section>
 
-  <!-- SALES BAND (pricing placeholder) -->
+  <!-- ENGAGEMENTS -->
   <section id="pricing">
     <div class="wrap">
       <div class="salesband glass reveal">
@@ -547,7 +518,7 @@
         <p>We don't do off-the-shelf packages. Tell us what you're building and we'll come back with a clear plan and a quote — or just connect with our team to talk it through.</p>
         <div class="btns">
           <a href="#contact" class="btn btn-primary">Send your project for review →</a>
-          <a href="mailto:team@lineararccreative.com" class="btn btn-ghost">Connect with sales</a>
+          <a href="#contact" class="btn btn-ghost">Connect with sales</a>
         </div>
       </div>
     </div>
@@ -595,7 +566,7 @@
           </select>
         </div>
         <div class="field"><label for="msg">Project details</label><textarea id="msg" name="msg" placeholder="What are you trying to build?" required></textarea></div>
-        <button type="submit" class="btn btn-primary">Send project brief →</button>
+        <button type="submit" class="btn btn-primary submit">Send project brief →</button>
         <p class="form-note">This opens your email app with the details pre-filled. To accept submissions automatically, we can wire a form service when it goes live.</p>
       </form>
     </div>
@@ -605,15 +576,17 @@
 <footer>
   <div class="wrap">
     <div class="foot-top">
-      <div>
-        <div class="logo">
+      <div class="foot-brand">
+        <a class="logo" href="#top" aria-label="Linear Arc Creative home">
           <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <path d="M6 30 A 18 18 0 0 1 34 30" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
-            <line x1="6" y1="30" x2="6" y2="13" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="20" cy="11" r="3.4" fill="url(#g)"/>
+            <defs><linearGradient id="gf" x1="0" y1="0" x2="40" y2="40">
+              <stop offset="0" stop-color="#38e8ff"/><stop offset="1" stop-color="#7b5cff"/></linearGradient></defs>
+            <path d="M6 30 A 18 18 0 0 1 34 30" stroke="url(#gf)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="6" y1="30" x2="6" y2="13" stroke="url(#gf)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="20" cy="11" r="3.4" fill="url(#gf)"/>
           </svg>
-          <span><b style="color:var(--ink)">Linear Arc</b> Creative</span>
-        </div>
+          <span><b>Linear Arc</b> Creative</span>
+        </a>
         <p>Custom code &amp; integrations across corporate, social, and brand platforms. Built in Los Angeles.</p>
       </div>
       <div>
@@ -623,14 +596,6 @@
       <div>
         <h6>Connect</h6>
         <a href="#contact">Start a project</a><a href="mailto:team@lineararccreative.com">Email us</a><a href="#pricing">Engagements</a>
-      </div>
-      <div>
-        <h6>Newsletter</h6>
-        <p style="margin-top:0">Occasional notes on building. No spam.</p>
-        <form class="news" onsubmit="event.preventDefault();this.reset();alert('Thanks — newsletter signup will be wired up at launch.')">
-          <input type="email" placeholder="you@email.com" aria-label="Email" required />
-          <button class="btn btn-primary" type="submit" style="padding:11px 16px">→</button>
-        </form>
       </div>
     </div>
     <div class="foot-bottom">
@@ -651,34 +616,44 @@
   const header = document.querySelector('header');
   addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 8), {passive:true});
 
-  // mobile menu toggle
+  // mobile menu
   const menuBtn=document.getElementById('menuBtn'),mobileMenu=document.getElementById('mobileMenu');
-  menuBtn.addEventListener('click',()=>{const o=mobileMenu.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o);});
-  mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobileMenu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');}));
+  function setMenu(open){mobileMenu.classList.toggle('open',open);menuBtn.setAttribute('aria-expanded',open);menuBtn.setAttribute('aria-label',open?'Close menu':'Open menu');}
+  menuBtn.addEventListener('click',()=>setMenu(!mobileMenu.classList.contains('open')));
+  mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&mobileMenu.classList.contains('open')){setMenu(false);menuBtn.focus();}});
+
+  // solutions menu: sync aria-expanded with hover/focus
+  const solBtn=document.querySelector('.has-mega>button'),solWrap=document.querySelector('.has-mega');
+  if(solWrap){['mouseenter','focusin'].forEach(ev=>solWrap.addEventListener(ev,()=>solBtn.setAttribute('aria-expanded','true')));
+    ['mouseleave','focusout'].forEach(ev=>solWrap.addEventListener(ev,()=>solBtn.setAttribute('aria-expanded','false')));}
 
   // back to top
   const toTop=document.getElementById('toTop');
   addEventListener('scroll',()=>{toTop.classList.toggle('show',scrollY>520);},{passive:true});
   toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
 
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('in'),(i%4)*70); io.unobserve(e.target);} });
-  },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  // reveal on scroll
+  const io=new IntersectionObserver((es)=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),(i%4)*70);io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
+  // contact form -> mailto
   function handleSubmit(e){
     e.preventDefault();
     const f=e.target;
-    const subject=encodeURIComponent('Project brief — '+(f.name.value||'New enquiry'));
-    const body=encodeURIComponent('Name: '+f.name.value+'\nEmail: '+f.email.value+'\nCompany: '+(f.company.value||'—')+'\nProject type: '+f.type.value+'\n\nDetails:\n'+f.msg.value);
+    const clean=v=>(v||'').replace(/[\r\n]+/g,' ').trim();
+    const name=clean(f.name.value);
+    const subject=encodeURIComponent('Project brief — '+(name||'New enquiry'));
+    const body=encodeURIComponent('Name: '+name+'\nEmail: '+clean(f.email.value)+'\nCompany: '+(clean(f.company.value)||'—')+'\nProject type: '+f.type.value+'\n\nDetails:\n'+f.msg.value.trim());
     window.location.href='mailto:team@lineararccreative.com?subject='+subject+'&body='+body;
     return false;
   }
 
+  // animated arc background
   (function(){
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const cv=document.getElementById('arc-canvas'),ctx=cv.getContext('2d');
-    let w,h,dpr,arcs=[];const COLORS=['rgba(56,232,255,','rgba(123,92,255,','rgba(255,92,168,'];
+    let w,h,dpr,arcs=[],rafId=null,resizeTimer;const COLORS=['rgba(56,232,255,','rgba(123,92,255,','rgba(255,92,168,'];
     function resize(){dpr=Math.min(devicePixelRatio||1,2);w=cv.width=innerWidth*dpr;h=cv.height=innerHeight*dpr;
       cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';build();}
     function build(){const n=innerWidth<680?7:14;arcs=[];for(let i=0;i<n;i++){arcs.push({
@@ -687,8 +662,12 @@
       c:COLORS[i%COLORS.length],a:0.04+Math.random()*0.10,lw:(0.6+Math.random()*1.6)*dpr});}}
     function frame(){ctx.clearRect(0,0,w,h);for(const o of arcs){o.start+=o.speed;ctx.beginPath();
       ctx.strokeStyle=o.c+o.a+')';ctx.lineWidth=o.lw;ctx.arc(o.x,o.y,o.r,o.start,o.start+o.len);ctx.stroke();}
-      requestAnimationFrame(frame);}
-    addEventListener('resize',resize,{passive:true});resize();frame();
+      rafId=requestAnimationFrame(frame);}
+    function start(){if(rafId==null)rafId=requestAnimationFrame(frame);}
+    function stop(){if(rafId!=null){cancelAnimationFrame(rafId);rafId=null;}}
+    addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,120);},{passive:true});
+    document.addEventListener('visibilitychange',()=>{document.hidden?stop():start();});
+    resize();start();
   })();
 </script>
 </body>
