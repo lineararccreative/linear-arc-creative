@@ -223,8 +223,8 @@
   .ai-cta .btn{flex:none}
 
   .video-frame{max-width:920px;margin:0 auto;border-radius:22px;overflow:hidden;border:1px solid var(--panel-border);
-    box-shadow:0 40px 90px -40px rgba(80,120,255,.5);background:#0a0c18}
-  .video-frame video{width:100%;height:auto;display:block}
+    box-shadow:0 40px 90px -40px rgba(80,120,255,.5);background:#0a0c18;aspect-ratio:16/9}
+  .video-frame video{width:100%;height:100%;object-fit:cover;display:block}
 
   .post{overflow:hidden;transition:.3s}
   .post:hover{transform:translateY(-6px)}
@@ -577,7 +577,7 @@
         <p>A quick look at how we bring AI, custom code, and integrations together.</p>
       </div>
       <div class="video-frame reveal">
-        <video src="Linear_Arc_Creative_AI.mp4" autoplay muted loop playsinline preload="metadata" controls aria-label="Linear Arc Creative showcase video"></video>
+        <video src="Linear_Arc_Creative_AI.mp4" autoplay muted loop playsinline preload="auto" controls aria-label="Linear Arc Creative showcase video"></video>
       </div>
     </div>
   </section>
