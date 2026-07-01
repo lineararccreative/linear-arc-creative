@@ -146,6 +146,7 @@
   .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
   .grid{display:grid;gap:20px}
   .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
 
   .card{padding:32px;position:relative;overflow:hidden;transition:.3s}
   .card::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
@@ -185,6 +186,8 @@
   .logo-tile .bi{display:flex;align-items:center;justify-content:center;height:32px;opacity:.95;transition:.25s}
   .logo-tile .bi svg{height:30px;width:auto}
   .logo-tile:hover .bi{opacity:1;transform:scale(1.04)}
+  .logo-tile .badge{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:12.5px;
+    font-weight:700;color:#030913;background:linear-gradient(135deg,var(--c1),var(--c2));font-family:"Space Grotesk"}
   .logo-tile span{font-size:12.5px;color:var(--muted);font-weight:500}
   .logo-tile.custom{position:relative}
   .logo-tile.custom::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
@@ -211,6 +214,17 @@
   .salesband h2{font-size:clamp(28px,4vw,42px);font-weight:700;max-width:18ch;margin:0 auto}
   .salesband p{color:var(--muted);max-width:54ch;margin:18px auto 0;font-size:16.5px}
   .salesband .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+
+  .ai-cta{margin-top:20px;padding:30px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden}
+  .ai-cta::before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;pointer-events:none;
+    background:linear-gradient(120deg,var(--c1),var(--c2),var(--c3));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  .ai-cta h3{font-size:clamp(19px,2.3vw,25px);font-weight:600;max-width:28ch;margin:0}
+  .ai-cta .btn{flex:none}
+
+  .video-frame{max-width:920px;margin:0 auto;border-radius:22px;overflow:hidden;border:1px solid var(--panel-border);
+    box-shadow:0 40px 90px -40px rgba(80,120,255,.5);background:#0a0c18}
+  .video-frame video{width:100%;height:auto;display:block}
 
   .post{overflow:hidden;transition:.3s}
   .post:hover{transform:translateY(-6px)}
@@ -282,6 +296,14 @@
   #about{background:radial-gradient(55% 75% at 4% 50%,rgba(56,232,255,.10),transparent 60%)}
   #insights{background:radial-gradient(60% 70% at 82% 110%,rgba(255,92,168,.11),transparent 65%)}
   #contact{background:radial-gradient(60% 80% at 14% -5%,rgba(123,92,255,.12),transparent 60%)}
+  #ai{background:radial-gradient(60% 75% at 8% 8%,rgba(56,232,255,.11),transparent 60%)}
+  #watch{background:radial-gradient(60% 75% at 90% 8%,rgba(255,92,168,.11),transparent 60%)}
+  #ai .card:nth-child(2) .ico{background:linear-gradient(135deg,rgba(123,92,255,.24),rgba(123,92,255,.06))}
+  #ai .card:nth-child(2) .ico svg{stroke:var(--c2)}
+  #ai .card:nth-child(3) .ico{background:linear-gradient(135deg,rgba(255,92,168,.24),rgba(255,92,168,.06))}
+  #ai .card:nth-child(3) .ico svg{stroke:var(--c3)}
+  #ai .card:nth-child(4) .ico{background:linear-gradient(135deg,rgba(123,92,255,.24),rgba(123,92,255,.06))}
+  #ai .card:nth-child(4) .ico svg{stroke:var(--c2)}
   #services .card:nth-child(3n+2) .ico,#value .v:nth-child(3n+2) .ico{background:linear-gradient(135deg,rgba(123,92,255,.24),rgba(123,92,255,.06))}
   #services .card:nth-child(3n+2) .ico svg,#value .v:nth-child(3n+2) .ico svg{stroke:var(--c2)}
   #services .card:nth-child(3n) .ico,#value .v:nth-child(3n) .ico{background:linear-gradient(135deg,rgba(255,92,168,.24),rgba(255,92,168,.06))}
@@ -299,11 +321,12 @@
     .foot-brand{grid-column:1/-1}
   }
   @media(max-width:860px){
-    .g3,.vgrid{grid-template-columns:1fr 1fr}
+    .g3,.g4,.vgrid{grid-template-columns:1fr 1fr}
   }
   @media(max-width:680px){
     .nav-links{display:none}.menu-toggle{display:grid;place-items:center}
-    .g3,.vgrid,.row2{grid-template-columns:1fr}
+    .g3,.g4,.vgrid,.row2{grid-template-columns:1fr}
+    .ai-cta{padding:26px 22px}
     .logo-tile{flex-basis:42%}
     section{padding:72px 0}.salesband{padding:38px 22px}
     .hero{padding:78px 0 58px}
@@ -373,8 +396,8 @@
       </div>
       <a href="#work">Capabilities</a>
       <a href="#integrations">Integrations</a>
+      <a href="#ai">AI</a>
       <a href="#about">Approach</a>
-      <a href="#insights">Insights</a>
       <a href="#contact" class="btn btn-primary">Start a project</a>
     </nav>
     <button class="menu-toggle" id="menuBtn" aria-label="Open menu" aria-expanded="false">
@@ -385,6 +408,8 @@
     <a href="#services">Services</a>
     <a href="#work">Capabilities</a>
     <a href="#integrations">Integrations</a>
+    <a href="#ai">AI</a>
+    <a href="#watch">Watch</a>
     <a href="#about">Approach</a>
     <a href="#insights">Insights</a>
     <a href="#contact" class="btn btn-primary mm-cta">Start a project →</a>
@@ -472,23 +497,31 @@
         <p>From off-the-shelf platforms to AI agents to bespoke endpoints, we wire your stack together so data flows where it should — no copy-paste, no silos.</p>
       </div>
       <div class="grid intg">
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/zapier/9aa3c4" onerror="this.style.display='none'" alt="Zapier" loading="lazy"/><span>Zapier</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/hubspot/9aa3c4" onerror="this.style.display='none'" alt="HubSpot" loading="lazy"/><span>HubSpot</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/github/9aa3c4" onerror="this.style.display='none'" alt="GitHub" loading="lazy"/><span>GitHub</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/quickbooks/9aa3c4" onerror="this.style.display='none'" alt="QuickBooks" loading="lazy"/><span>QuickBooks</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/stripe/9aa3c4" onerror="this.style.display='none'" alt="Stripe" loading="lazy"/><span>Stripe</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/zapier/9aa3c4" alt="Zapier" loading="lazy"/><span>Zapier</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/hubspot/9aa3c4" alt="HubSpot" loading="lazy"/><span>HubSpot</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/github/9aa3c4" alt="GitHub" loading="lazy"/><span>GitHub</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/quickbooks/9aa3c4" alt="QuickBooks" loading="lazy"/><span>QuickBooks</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/stripe/9aa3c4" alt="Stripe" loading="lazy"/><span>Stripe</span></div>
         <div class="logo-tile glass reveal"><span class="bi" role="img" aria-label="Slack"><svg viewBox="0 0 24 24"><rect x="9.5" y="2" width="3.6" height="9" rx="1.8" fill="#36C5F0"/><rect x="13" y="10.9" width="9" height="3.6" rx="1.8" fill="#2EB67D"/><rect x="10.9" y="13" width="3.6" height="9" rx="1.8" fill="#ECB22E"/><rect x="2" y="9.5" width="9" height="3.6" rx="1.8" fill="#E01E5A"/></svg></span><span>Slack</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/shopify/9aa3c4" onerror="this.style.display='none'" alt="Shopify" loading="lazy"/><span>Shopify</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/shopify/9aa3c4" alt="Shopify" loading="lazy"/><span>Shopify</span></div>
         <div class="logo-tile glass reveal"><span class="bi" role="img" aria-label="Salesforce"><svg viewBox="0 0 24 24"><path d="M10 18.5a3.7 3.7 0 0 1-.7-7.33A4.7 4.7 0 0 1 18.2 8.7a3.3 3.3 0 0 1 .1 6.59c-.2.02-.4.02-.6.02H10z" fill="#00A1E0"/></svg></span><span>Salesforce</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlesheets/9aa3c4" onerror="this.style.display='none'" alt="Google Workspace" loading="lazy"/><span>Google</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/notion/9aa3c4" onerror="this.style.display='none'" alt="Notion" loading="lazy"/><span>Notion</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/mailchimp/9aa3c4" onerror="this.style.display='none'" alt="Mailchimp" loading="lazy"/><span>Mailchimp</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/asana/9aa3c4" onerror="this.style.display='none'" alt="Asana" loading="lazy"/><span>Asana</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/calendly/9aa3c4" onerror="this.style.display='none'" alt="Calendly" loading="lazy"/><span>Calendly</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlesheets/9aa3c4" alt="Google Workspace" loading="lazy"/><span>Google</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/notion/9aa3c4" alt="Notion" loading="lazy"/><span>Notion</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/mailchimp/9aa3c4" alt="Mailchimp" loading="lazy"/><span>Mailchimp</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/asana/9aa3c4" alt="Asana" loading="lazy"/><span>Asana</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/calendly/9aa3c4" alt="Calendly" loading="lazy"/><span>Calendly</span></div>
         <div class="logo-tile glass reveal"><span class="bi" role="img" aria-label="Microsoft 365"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9" fill="#F25022"/><rect x="13" y="2" width="9" height="9" fill="#7FBA00"/><rect x="2" y="13" width="9" height="9" fill="#00A4EF"/><rect x="13" y="13" width="9" height="9" fill="#FFB900"/></svg></span><span>Microsoft 365</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/anthropic/9aa3c4" onerror="this.style.display='none'" alt="Claude" loading="lazy"/><span>Claude</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/anthropic/9aa3c4" alt="Claude" loading="lazy"/><span>Claude</span></div>
         <div class="logo-tile glass reveal"><span class="bi" role="img" aria-label="OpenAI"><svg viewBox="0 0 24 24" fill="none" stroke="#10A37F" stroke-width="2.1" stroke-linecap="round"><path d="M12 3v18M3.8 7.5l16.4 9M3.8 16.5l16.4-9"/></svg></span><span>OpenAI</span></div>
-        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlegemini/9aa3c4" onerror="this.style.display='none'" alt="Gemini" loading="lazy"/><span>Gemini</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlegemini/9aa3c4" alt="Gemini" loading="lazy"/><span>Gemini</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/amazonwebservices/9aa3c4" alt="AWS" loading="lazy"/><span>AWS</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/googlecloud/9aa3c4" alt="Google Cloud" loading="lazy"/><span>Google Cloud</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/microsoftazure/9aa3c4" alt="Azure" loading="lazy"/><span>Azure</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/docker/9aa3c4" alt="Docker" loading="lazy"/><span>Docker</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/vercel/9aa3c4" alt="Vercel" loading="lazy"/><span>Vercel</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/cloudflare/9aa3c4" alt="Cloudflare" loading="lazy"/><span>Cloudflare</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/twilio/9aa3c4" alt="Twilio" loading="lazy"/><span>Twilio</span></div>
+        <div class="logo-tile glass reveal"><img src="https://cdn.simpleicons.org/airtable/9aa3c4" alt="Airtable" loading="lazy"/><span>Airtable</span></div>
         <div class="logo-tile glass reveal custom"><span class="ci"><svg viewBox="0 0 24 24"><path d="M9 7V4a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v3M14 7V4a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v3M7 7h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M12 16v5"/></svg></span><span>Custom API</span></div>
         <div class="logo-tile glass reveal custom"><span class="ci"><svg viewBox="0 0 24 24"><rect x="5" y="9" width="14" height="10" rx="3"/><path d="M12 9V5M9 2.5h6"/><circle cx="9.5" cy="14" r="1.2" fill="#38e8ff" stroke="none"/><circle cx="14.5" cy="14" r="1.2" fill="#38e8ff" stroke="none"/><path d="M3 13.5v3M21 13.5v3"/></svg></span><span>AI Agents</span></div>
       </div>
@@ -510,6 +543,41 @@
         <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0 0-10 7 7 0 0 0-13 2A4 4 0 0 0 5 18z"/></svg></div><h4>Cloud services</h4></div><p>Secure, scalable cloud setups that let teams ship and collaborate from anywhere.</p></div>
         <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20a6 6 0 0 1 12 0M14.5 20a5 5 0 0 1 6.5-4.8"/></svg></div><h4>Team collaboration</h4></div><p>Clear communication and tight iteration that keep projects moving and visible.</p></div>
         <div class="v glass reveal"><div class="vh"><div class="ico"><svg viewBox="0 0 24 24"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7 12 12l8.7-5M12 12v9"/></svg></div><h4>3D &amp; motion</h4></div><p>Stunning interactive visuals that elevate storytelling and engagement.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI FOR BUSINESS -->
+  <section id="ai">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">AI for business</div>
+        <h2>Put AI to work — before your competitors do.</h2>
+        <p>AI is rewriting how businesses operate, ship, and compete — and the tooling changes every month. We cut through the noise: adopt what genuinely moves the needle, upgrade the systems you already run, and bring your people along for the ride. There's never been a better time to upskill yourself and your task force.</p>
+      </div>
+      <div class="grid g4">
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></svg></div><h3>AI Strategy &amp; Audits</h3><p>We map where AI genuinely helps your business — and where it's hype — then hand you a clear, jargon-free plan of action.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="9" width="14" height="10" rx="3"/><path d="M12 9V5M9 2.5h6"/><path d="M9.5 14h.01M14.5 14h.01"/><path d="M3 13v3M21 13v3"/></svg></div><h3>Custom Agents &amp; Automation</h3><p>Bespoke AI agents that handle real work — support, research, ops — wired directly into the tools you already use.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div><h3>Model Integration</h3><p>OpenAI, Claude, and Gemini folded into your products and internal tools — with the guardrails to run them safely.</p></article>
+        <article class="card glass reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 3 6 3s6-2 6-3v-5"/></svg></div><h3>Team Upskilling &amp; Training</h3><p>Hands-on training that levels up your whole task force — from first prompt to confidently shipping AI-assisted work.</p></article>
+      </div>
+      <div class="ai-cta glass reveal">
+        <h3>There's never been a better time to upskill yourself and your task force.</h3>
+        <a href="#contact" class="btn btn-primary">Talk AI with us →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WATCH -->
+  <section id="watch">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <div class="kicker">Watch</div>
+        <h2>See what we're building.</h2>
+        <p>A quick look at how we bring AI, custom code, and integrations together.</p>
+      </div>
+      <div class="video-frame reveal">
+        <video src="Linear_Arc_Creative_AI.mp4" autoplay muted loop playsinline preload="metadata" controls aria-label="Linear Arc Creative showcase video"></video>
       </div>
     </div>
   </section>
@@ -619,7 +687,7 @@
       </div>
       <div>
         <h6>Studio</h6>
-        <a href="#services">Services</a><a href="#work">Capabilities</a><a href="#integrations">Integrations</a><a href="#about">Approach</a><a href="#insights">Insights</a>
+        <a href="#services">Services</a><a href="#work">Capabilities</a><a href="#integrations">Integrations</a><a href="#ai">AI</a><a href="#watch">Watch</a><a href="#about">Approach</a><a href="#insights">Insights</a>
       </div>
       <div>
         <h6>Connect</h6>
@@ -660,6 +728,21 @@
   const toTop=document.getElementById('toTop');
   addEventListener('scroll',()=>{toTop.classList.toggle('show',scrollY>520);},{passive:true});
   toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+  // integration logos: lettered badge fallback if a logo can't load (e.g. CDN blocked)
+  document.querySelectorAll('.logo-tile img').forEach(function(img){
+    function fail(){ if(img.dataset.f)return; img.dataset.f='1';
+      var b=document.createElement('span'); b.className='badge';
+      b.textContent=(img.getAttribute('alt')||'?').replace(/[^A-Za-z0-9]/g,'').slice(0,2).toUpperCase();
+      if(img.parentNode) img.parentNode.replaceChild(b,img);
+    }
+    img.addEventListener('error',fail);
+    if(img.complete && img.naturalWidth===0) fail();
+  });
+
+  // honor reduced-motion for the showcase video
+  (function(){var v=document.querySelector('#watch video');
+    if(v&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.addEventListener('loadedmetadata',function(){v.pause();});}})();
 
   // reveal on scroll
   const io=new IntersectionObserver((es)=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),(i%4)*70);io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
